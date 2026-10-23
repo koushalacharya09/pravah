@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PRAVAH — Learn the terms</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #1c1917;
+      --muted: #57534e;
+      --line: #e7e0d6;
+      --paper: #f3efe7;
+      --card: #fffcf8;
+      --accent: #0f5f5a;
+      --accent-ink: #f4fffd;
+    }
+    html[data-theme="dark"] {
+      color-scheme: dark;
+      --ink: #f6f1e8;
+      --muted: #d6d3d1;
+      --line: #44403c;
+      --paper: #1c1917;
+      --card: #292524;
+      --accent: #8fd9d0;
+      --accent-ink: #042f2e;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: "Segoe UI", sans-serif; color: var(--ink); background: var(--paper); line-height: 1.5; }
+    main { max-width: 800px; margin: 0 auto; padding: 56px 18px 64px; }
+    a { color: var(--accent); }
+    h1 { font-size: clamp(1.8rem, 4vw, 2.4rem); letter-spacing: -0.04em; margin: 0 0 8px; }
+    h2 { margin: 22px 0 8px; font-size: 1.15rem; }
+    .lede { color: var(--muted); }
+    article { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 14px 16px; margin: 10px 0; }
+    dt { font-weight: 650; }
+    dd { margin: 0 0 8px; }
+    .theme-toggle {
+      position: fixed; top: 12px; right: 12px; width: 40px; height: 40px; padding: 0;
+      display: grid; place-items: center; border-radius: 999px; border: 1px solid var(--line);
+      background: var(--card); color: var(--ink); cursor: pointer;
+    }
+    button:focus-visible, a:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+  </style>
+</head>
+<body>
+  <button type="button" id="theme" class="theme-toggle" aria-label="Switch to dark mode"></button>
+  <main>
+    <p><a href="/">PRAVAH</a></p>
+    <h1>Learn the terms</h1>
+    <p class="lede">Each term is the one the engine uses. Plain language first, then the definition, why it is here, and a Diksha Coaching example.</p>
+    <div id="list"></div>
+  </main>
+  <script>
+    const moon = '<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M21 14.5A8.5 8.5 0 0 1 9.5 3 7 7 0 1 0 21 14.5z"></path></svg>';
+    const sun = '<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="12" cy="12" r="4" fill="currentColor"></circle></svg>';
+    const theme = document.getElementById("theme");
+    function paint() {
+      const dark = document.documentElement.dataset.theme === "dark";
+      theme.innerHTML = dark ? sun : moon;
+      theme.setAttribute("aria-label", dark ? "Switch to light mode" : "Switch to dark mode");
+    }
+    theme.addEventListener("click", () => {
+      const next = document.documentElement.dataset.theme === "dark" ? "" : "dark";
+      document.documentElement.dataset.theme = next;
+      localStorage.setItem("pravah-theme", next);
+      paint();
+    });
+    if (localStorage.getItem("pravah-theme") === "dark") document.documentElement.dataset.theme = "dark";
+    paint();
+    fetch("/api/glossary").then((response) => response.json()).then((rows) => {
+      const host = document.getElementById("list");
+      const groups = new Map();
+      rows.forEach((row) => {
+        if (!groups.has(row.module_label)) groups.set(row.module_label, []);
+        groups.get(row.module_label).push(row);
+      });
+      groups.forEach((items, label) => {
+        const section = document.createElement("section");
+        const heading = document.createElement("h2");
+        heading.textContent = label;
+        section.append(heading);
+        items.forEach((item) => {
+          const card = document.createElement("article");
+          const title = document.createElement("h3");
+          title.textContent = item.phrase;
+          card.append(title);
+          [["Plain", item.plain], ["Technical", item.technical], ["Why PRAVAH uses it", item.why_used], ["Example", item.example]].forEach(([name, text]) => {
+            const list = document.createElement("dl");
+            const term = document.createElement("dt");
+            term.textContent = name;
+            const detail = document.createElement("dd");
+            detail.textContent = text;
+            list.append(term, detail);
+            card.append(list);
+          });
+          section.append(card);
+        });
+        host.append(section);
+      });
+    });
+  </script>
+</body>
+</html>

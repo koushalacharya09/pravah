@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<log xes.version="1.0" xmlns="http://www.xes-standard.org/">
+  <trace>
+    <string key="concept:name" value="case-1"/>
+    <event>
+      <string key="concept:name" value="enquiry"/>
+      <date key="time:timestamp" value="2010-03-01T09:00:00.000+00:00"/>
+      <string key="org:resource" value="Anita"/>
+    </event>
+    <event>
+      <string key="concept:name" value="enrol"/>
+      <date key="time:timestamp" value="2010-03-05T09:00:00.000+00:00"/>
+      <string key="org:resource" value="Rahul"/>
+    </event>
+  </trace>
+  <trace>
+    <string key="concept:name" value="case-2"/>
+    <event>
+      <string key="concept:name" value="enquiry"/>
+      <date key="time:timestamp" value="2010-03-02T09:00:00.000+00:00"/>
+      <string key="org:resource" value="Anita"/>
+    </event>
+    <event>
+      <string key="concept:name" value="trial"/>
+      <date key="time:timestamp" value="2010-03-04T09:00:00.000+00:00"/>
+      <string key="org:resource" value="Anita"/>
+    </event>
+  </trace>
+</log>

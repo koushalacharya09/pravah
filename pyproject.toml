@@ -1,0 +1,32 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pravah"
+version = "0.1.0"
+description = "Hidden process intelligence. Phase 1 is deterministic ingestion."
+requires-python = ">=3.11"
+dependencies = [
+    "flask>=3.0",
+    "numpy>=1.26",
+    "pandas>=2.2",
+    "openpyxl>=3.1",
+    "lifelines>=0.29",
+    "scikit-learn>=1.4",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "networkx>=3.2",
+    "scipy>=1.11",
+]
+xes = ["pm4py>=2.7"]
+
+[tool.setuptools.packages.find]
+include = ["pravah*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
