@@ -30,6 +30,11 @@ def learn_page():
     return send_from_directory(app.static_folder, "learn.html")
 
 
+@app.get("/links")
+def links_page():
+    return send_from_directory(app.static_folder, "links.html")
+
+
 @app.get("/phases.js")
 def phases_script():
     return send_from_directory(app.static_folder, "phases.js")

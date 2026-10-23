@@ -80,6 +80,8 @@ def test_page_shell_has_product_basics() -> None:
     assert 'rel="icon"' in page
     assert "og:image" in page
     assert 'href="/about"' in page
+    assert 'href="/links"' in page
+    assert "Project links" in page
     assert "playback" not in page
     assert "What it does now" in about
     assert "not built yet" in about
@@ -95,6 +97,14 @@ def test_about_and_favicon_are_served() -> None:
     client = app.test_client()
     assert client.get("/about").status_code == 200
     assert client.get("/learn").status_code == 200
+    links = client.get("/links")
+    assert links.status_code == 200
+    body = links.get_data(as_text=True)
+    assert "PRAVAH — Koushal Acharya" in body
+    assert "Try a realistic dataset" in body
+    assert 'href="/favicon.svg"' in body
+    assert "og.png" in body
+    assert "prefers-reduced-motion" in body
     assert client.get("/favicon.svg").status_code == 200
     home = client.get("/").get_data(as_text=True)
     assert "og:image" in home
